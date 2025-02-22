@@ -100,29 +100,30 @@ refs.loadMoreBtn.addEventListener('click', async () => {
   try {
     const { hits } = await fetchImages(params.query, params.page);
     hideLoader();
-    showLoadMoreBtn();
 
     if (hits.length === 0) {
-      hideLoadMoreBtn();
       iziToast.info({
         title: 'End of results',
         message: "We're sorry, but you've reached the end of search results.",
         position: 'topRight',
         timeout: 3000,
       });
-    } else {
-      renderImg(hits, false);
-      smoothScroll();
+      return;
+    }
 
-      if (params.page * 40 >= params.totalHits) {
-        hideLoadMoreBtn();
-        iziToast.info({
-          title: 'End of results',
-          message: "We're sorry, but you've reached the end of search results.",
-          position: 'topRight',
-          timeout: 3000,
-        });
-      }
+    renderImg(hits, false);
+    smoothScroll();
+
+    if (hits.length < 40) { 
+      hideLoadMoreBtn();
+      iziToast.info({
+        title: 'End of results',
+        message: "We're sorry, but you've reached the end of search results.",
+        position: 'bottomRight',
+        timeout: 3000,
+      });
+    } else {
+      showLoadMoreBtn();
     }
   } catch (error) {
     hideLoader();
