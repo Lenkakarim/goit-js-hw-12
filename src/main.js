@@ -59,7 +59,6 @@ refs.form.addEventListener('submit', async event => {
       params.page
     );
     params.totalHits = newTotalHits;
-    hideLoader();
 
     renderImg([], true);
 
@@ -78,17 +77,16 @@ refs.form.addEventListener('submit', async event => {
       }
     }
   } catch (error) {
-    hideLoader();
     iziToast.error({
       title: 'Error',
       message: 'Something went wrong! Please try again later.',
       position: 'topRight',
       timeout: 3000,
     });
-
     renderImg([], true);
-
     console.error('Error fetching images:', error);
+  } finally {
+    hideLoader();
   }
 });
 
@@ -99,7 +97,6 @@ refs.loadMoreBtn.addEventListener('click', async () => {
 
   try {
     const { hits } = await fetchImages(params.query, params.page);
-    hideLoader();
 
     if (hits.length === 0) {
       iziToast.info({
@@ -126,7 +123,6 @@ refs.loadMoreBtn.addEventListener('click', async () => {
       showLoadMoreBtn();
     }
   } catch (error) {
-    hideLoader();
     iziToast.error({
       title: 'Error',
       message: 'Something went wrong! Please try again later.',
@@ -134,5 +130,7 @@ refs.loadMoreBtn.addEventListener('click', async () => {
       timeout: 3000,
     });
     console.error('Error fetching images:', error);
+  } finally {
+    showLoader();
   }
 });
